@@ -4,6 +4,11 @@ import time
 from bs4 import BeautifulSoup, Comment
 from os.path  import basename
 from datetime import datetime
+import codecs
+import h5py
+from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
+import numpy as np
 
 def job():
     # download required page
@@ -15,7 +20,7 @@ def job():
     [comment.extract() for comment in comments]
 
     today = datetime.now()
-    filename = str(today.day)+'-'+str(today.month)+'-'+str(today.year)+'.png'
+    filename = str(today.day)+'/'+str(today.month)+'/'+str(today.year)+'.png'
 
     image = soup.select(".cursor_zoom img")
     url = image[0]['src']
@@ -23,7 +28,6 @@ def job():
     # download image and save
     with open(filename,"wb") as f:
         f.write(requests.get(url).content)
-        
     # change desktop background
     os.system("gsettings set org.gnome.desktop.background picture-uri file:////home/foobar/PythonScripts/" + filename)
     return
